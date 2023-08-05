@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 
-pub fn parse_args() -> Cli {
+pub fn parse() -> Cli {
 	Cli::parse()
 }
 

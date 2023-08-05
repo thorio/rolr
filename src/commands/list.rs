@@ -1,8 +1,9 @@
-use crate::roles::{self, Role};
+use crate::roles;
 use console::style;
+use itertools::Itertools;
 
 pub fn main() {
-	let roles = roles::get_roles().collect::<Vec<Role>>();
+	let roles = roles::get_roles().collect_vec();
 	let active_roles = roles::get_active_roles();
 
 	let max_name_len = roles.iter().map(|a| a.name.len()).max().unwrap_or_default();

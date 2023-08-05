@@ -1,19 +1,20 @@
-use parsing::{parse_args, Commands};
+use cli::Commands;
 
+mod cli;
 mod commands;
 mod config;
-mod parsing;
+mod playbook;
 mod roles;
 
 fn main() {
-	let cli = parse_args();
+	let cli = cli::parse();
 
-	match &cli.command {
+	match cli.command {
 		// Commands::Add { roles } => (),
 		Commands::Select => (),
 		Commands::Update => (),
 		Commands::List => commands::list(),
-		// Commands::Run { roles } => (),
+		Commands::Run { roles } => commands::run(roles),
 		// Commands::Show { role } => (),
 		_ => (),
 	};
