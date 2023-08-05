@@ -1,0 +1,11 @@
+---
+# trailblazer
+
+- name: Feldspar
+  gather_facts: false
+  hosts: all
+  tasks:
+    - name: Campfire
+      debug:
+        msg: You cut it a little close, don't you think? Well, it worked out all right in the end, I suppose. Ahh, I hope there are beasties in the next one.
+

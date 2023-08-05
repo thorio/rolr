@@ -1,0 +1,10 @@
+---
+# this description will be ignored because it is the second play for the same role
+
+- name: example task
+  gather_facts: false
+  hosts: all
+  tasks:
+    - name: Print debug message
+      debug:
+        msg: Hello, world!

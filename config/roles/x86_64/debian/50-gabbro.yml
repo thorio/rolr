@@ -1,0 +1,10 @@
+---
+# poet
+
+- name: Gabbro
+  gather_facts: false
+  hosts: all
+  tasks:
+    - name: Campfire
+      debug:
+        msg: I tell you what, this has been really fun. And I got to help make something pretty cool, so I've got no complaints. I mean, not me, exactly, but close enough. It's the kind of thing that makes you glad you stopped and smelled the pine trees along the way, you know?

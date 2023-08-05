@@ -1,0 +1,10 @@
+---
+# stargazer
+
+- name: Chert
+  gather_facts: false
+  hosts: all
+  tasks:
+    - name: Campfire
+      debug:
+        msg: Even if it's over now, I had a good time learning. But I think the rules are about to change.

@@ -1,0 +1,11 @@
+---
+# example description
+# more example description that will be ignored by rolr
+
+- name: example task
+  gather_facts: false
+  hosts: all
+  tasks:
+    - name: Print debug message
+      debug:
+        msg: Hello, world!

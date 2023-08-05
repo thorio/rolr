@@ -1,0 +1,10 @@
+---
+# another role that does something
+
+- name: example task
+  gather_facts: false
+  hosts: all
+  tasks:
+    - name: Print debug message
+      debug:
+        msg: Hello, world!

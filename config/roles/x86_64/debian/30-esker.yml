@@ -1,0 +1,10 @@
+---
+# observer
+
+- name: Esker
+  gather_facts: false
+  hosts: all
+  tasks:
+    - name: Campfire
+      debug:
+        msg: Wow… how long has it been since I got to make music with everyone around a campfire? I'm really happy we're all here.
