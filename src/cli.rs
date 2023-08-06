@@ -1,13 +1,13 @@
 use clap::{Parser, Subcommand};
 
-pub fn parse() -> Cli {
-	Cli::parse()
+pub fn parse() -> CliArgs {
+	CliArgs::parse()
 }
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 #[command(propagate_version = true)]
-pub struct Cli {
+pub struct CliArgs {
 	#[command(subcommand)]
 	pub command: Commands,
 
@@ -32,7 +32,4 @@ pub enum Commands {
 
 	/// Run roles without selecting them
 	Run { roles: Vec<String> },
-
-	/// Open the role's playbook in a pager
-	Show { role: String },
 }

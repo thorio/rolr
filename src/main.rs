@@ -1,4 +1,5 @@
-use cli::Commands;
+use anyhow::Result;
+use cli::{CliArgs, Commands};
 use std::cmp::max;
 
 mod cli;
@@ -12,15 +13,17 @@ fn main() {
 
 	init_logger(cli.verbosity.into());
 
+	run_command(cli).unwrap();
+}
+
+fn run_command(cli: CliArgs) -> Result<()> {
 	match cli.command {
 		Commands::List => commands::list(),
 		Commands::Add { roles } => commands::add(roles),
-		// Commands::Select => (),
+		Commands::Select => commands::select(),
 		Commands::Update => commands::update(),
 		Commands::Run { roles } => commands::run(roles),
-		// Commands::Show { role } => (),
-		_ => (),
-	};
+	}
 }
 
 fn init_logger(verbosity: usize) {

@@ -1,8 +1,9 @@
 use crate::roles;
+use anyhow::Result;
 use console::style;
 use itertools::Itertools;
 
-pub fn main() {
+pub fn main() -> Result<()> {
 	let roles = roles::get_roles().collect_vec();
 	let active_roles = roles::get_active_roles();
 
@@ -11,13 +12,10 @@ pub fn main() {
 	for role in roles {
 		print_checkmark(active_roles.contains(&role.name));
 
-		println!(
-			"{:<padding$}  {}",
-			role.name,
-			role.description.unwrap_or_default(),
-			padding = max_name_len
-		);
+		println!("{}", &role.display(max_name_len));
 	}
+
+	Ok(())
 }
 
 fn print_checkmark(show: bool) {

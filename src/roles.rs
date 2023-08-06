@@ -6,6 +6,7 @@ use log::warn;
 use regex::Regex;
 use std::{
 	collections::HashSet,
+	fmt::{self, Display, Formatter},
 	fs::{self, DirEntry, File},
 	io::Write,
 	io::{BufRead, BufReader, BufWriter},
@@ -123,6 +124,12 @@ pub struct Role {
 	pub plays: Vec<Play>,
 }
 
+impl Role {
+	pub fn display(&self, padding: usize) -> RoleDisplay<'_> {
+		RoleDisplay { role: self, padding }
+	}
+}
+
 pub struct Play {
 	pub path: PathBuf,
 	pub play_name: String,
@@ -136,5 +143,22 @@ impl Play {
 			description: get_play_description(&path),
 			path,
 		})
+	}
+}
+
+pub struct RoleDisplay<'a> {
+	pub role: &'a Role,
+	pub padding: usize,
+}
+
+impl Display for RoleDisplay<'_> {
+	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+		write!(
+			f,
+			"{:<padding$}  {}",
+			&self.role.name,
+			&self.role.description.as_deref().unwrap_or_default(),
+			padding = self.padding
+		)
 	}
 }

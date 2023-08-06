@@ -1,9 +1,9 @@
-use itertools::Itertools;
-
 use crate::{playbook, roles};
+use anyhow::Result;
+use itertools::Itertools;
 use std::collections::HashSet;
 
-pub fn main(roles: Vec<String>) {
+pub fn main(roles: Vec<String>) -> Result<()> {
 	let all_plays = roles::get_plays().collect_vec();
 
 	// not strictly necessary, but warns the user when they enter bogus roles
@@ -12,5 +12,5 @@ pub fn main(roles: Vec<String>) {
 	let roles: HashSet<String> = HashSet::from_iter(roles);
 	let plays = roles::get_plays_for_roles(roles::get_plays(), &roles);
 
-	playbook::run_plays(&plays).unwrap();
+	playbook::run_plays(&plays)
 }
