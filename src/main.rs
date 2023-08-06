@@ -11,8 +11,8 @@ fn main() {
 
 	match cli.command {
 		// Commands::Add { roles } => (),
-		Commands::Select => (),
-		Commands::Update => (),
+		// Commands::Select => (),
+		Commands::Update => commands::update(),
 		Commands::List => commands::list(),
 		Commands::Run { roles } => commands::run(roles),
 		// Commands::Show { role } => (),
