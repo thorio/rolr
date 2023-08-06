@@ -1,0 +1,36 @@
+name: publish
+
+on:
+  push:
+    tags: [ 'v*' ]
+
+jobs:
+  publish:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v3
+
+      - name: install tools
+        run: cargo install cargo-deb
+
+      - name: patch package version
+        run: |
+          tag=$(echo ${{ github.ref }} | grep -Po '(?<=^refs/tags/v).*')
+          version=$tag+$(git rev-parse --short HEAD)
+          sed -i "0,/version/{s/0.0.0/$version/}" Cargo.toml
+
+      - name: build
+        run: cargo build --release && cp target/release/rolr ./rolr-x86_64 && xz rolr-x86_64
+
+      - name: package deb
+        run: cargo deb && cp target/debian/*.deb ./rolr-x86_64.deb
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            rolr-x86_64.xz
+            rolr-x86_64.deb
