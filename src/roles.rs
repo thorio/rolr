@@ -2,6 +2,7 @@ use crate::config;
 use anyhow::Result;
 use itertools::Itertools;
 use lazy_static::lazy_static;
+use log::warn;
 use regex::Regex;
 use std::{
 	collections::HashSet,
@@ -71,6 +72,24 @@ pub fn get_plays() -> IntoIter<Play> {
 		.filter(is_yml_file)
 		.filter_map(|p| Play::new(p.path()))
 		.sorted_by(|a, b| PathBuf::cmp(&a.path, &b.path))
+}
+
+pub fn get_plays_for_roles(plays: IntoIter<Play>, roles: &HashSet<String>) -> Vec<Play> {
+	plays.filter(|r| roles.contains(&r.play_name)).collect_vec()
+}
+
+pub fn filter_invalid_roles(all_plays: &[Play], roles: Vec<String>, warn: bool) -> Vec<String> {
+	let valid_roles = all_plays.iter().map(|a| &a.play_name).collect::<HashSet<&String>>();
+
+	let (valid, invalid): (Vec<_>, Vec<_>) = roles.into_iter().partition(|r| valid_roles.contains(r));
+
+	if warn {
+		for invalid_role in invalid {
+			warn!(r#"Skipping unknown role "{}""#, invalid_role)
+		}
+	}
+
+	valid
 }
 
 fn is_yml_file(entry: &DirEntry) -> bool {
