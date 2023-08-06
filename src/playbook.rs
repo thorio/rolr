@@ -9,13 +9,13 @@ use std::{
 };
 
 #[allow(unused)]
-pub fn run_plays(plays: impl Iterator<Item = Play>) -> Result<()> {
+pub fn run_plays(plays: &[Play]) -> Result<()> {
 	let playbook_path = config::get_playbook_file();
 	generate(&playbook_path, plays)?;
 	run(&playbook_path);
 }
 
-fn generate(path: impl AsRef<Path>, plays: impl Iterator<Item = Play>) -> Result<()> {
+fn generate(path: impl AsRef<Path>, plays: &[Play]) -> Result<()> {
 	fs::create_dir_all(path.as_ref().parent().ok_or(anyhow!(""))?)?;
 
 	let file = File::create(path)?;
@@ -28,7 +28,6 @@ fn generate(path: impl AsRef<Path>, plays: impl Iterator<Item = Play>) -> Result
 		writeln!(writer, "- import_playbook: {}", play.path.display())?;
 	}
 
-	writer.flush().unwrap();
 	Ok(())
 }
 

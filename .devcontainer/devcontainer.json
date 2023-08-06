@@ -1,6 +1,8 @@
 {
 	"name": "Rust",
-	"image": "mcr.microsoft.com/devcontainers/rust:0-1-bullseye",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
 	"workspaceMount": "source=${localWorkspaceFolder},target=/source/rolr,type=bind",
 	"remoteEnv": {
 		"ROLR_CONFIG_PATH": "/source/rolr/config"
@@ -8,6 +10,6 @@
 	"customizations": {
 		"vscode": {
 			"extensions": ["shardulm94.trailing-spaces"]
-	    }
+		}
 	}
 }

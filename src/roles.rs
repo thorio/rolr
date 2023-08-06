@@ -1,11 +1,13 @@
 use crate::config;
+use anyhow::Result;
 use itertools::Itertools;
 use lazy_static::lazy_static;
 use regex::Regex;
 use std::{
 	collections::HashSet,
 	fs::{self, DirEntry, File},
-	io::{BufRead, BufReader},
+	io::Write,
+	io::{BufRead, BufReader, BufWriter},
 	path::{Path, PathBuf},
 	vec::IntoIter,
 };
@@ -23,6 +25,17 @@ pub fn get_active_roles() -> HashSet<String> {
 		.lines()
 		.map_while(Result::ok)
 		.collect::<HashSet<String>>()
+}
+
+pub fn set_active_roles(roles: &HashSet<String>) -> Result<()> {
+	let file = File::create(config::get_active_roles_file())?;
+	let mut writer = BufWriter::new(file);
+
+	for role in roles.iter().sorted() {
+		writeln!(writer, "{}", &role)?;
+	}
+
+	Ok(())
 }
 
 pub fn get_roles() -> IntoIter<Role> {
