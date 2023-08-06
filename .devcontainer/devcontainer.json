@@ -1,8 +1,9 @@
 {
-	"name": "Rust",
+	"name": "rolr",
 	"build": {
 		"dockerfile": "Dockerfile"
 	},
+	"workspaceFolder": "/source/rolr",
 	"workspaceMount": "source=${localWorkspaceFolder},target=/source/rolr,type=bind",
 	"remoteEnv": {
 		"ROLR_CONFIG_PATH": "/source/rolr/config"

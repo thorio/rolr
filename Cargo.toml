@@ -2,6 +2,9 @@
 name = "rolr"
 version = "0.1.0"
 edition = "2021"
+description = "host role manager built on top of ansible"
+license = "GPL-3.0"
+authors = ["thorou"]
 
 [profile.release]
 strip = true
