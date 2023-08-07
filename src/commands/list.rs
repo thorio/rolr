@@ -12,7 +12,7 @@ pub fn main() -> Result<()> {
 	for role in roles {
 		print_checkmark(active_roles.contains(&role.name));
 
-		println!("{}", &role.display(max_name_len));
+		println!(" {}", &role.display(max_name_len));
 	}
 
 	Ok(())

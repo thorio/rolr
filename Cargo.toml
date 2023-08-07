@@ -3,14 +3,20 @@ name = "rolr"
 version = "0.0.0" # patched by github actions
 edition = "2021"
 description = "host role manager built on top of ansible"
+readme = "README.md"
 license = "GPL-3.0"
 authors = ["thorou"]
+repository = "https://github.com/thorio/rolr"
 
 [profile.release]
 strip = true
 lto = true
 
 [package.metadata.deb]
+maintainer = "thorou <thorio.git@gmail.com>"
+depends = []
+
+[package.metadata.arch]
 maintainer = "thorou <thorio.git@gmail.com>"
 
 [dependencies]
