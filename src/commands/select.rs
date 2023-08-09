@@ -2,7 +2,7 @@ use crate::{
 	playbook,
 	roles::{self, Role},
 };
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 use dialoguer::MultiSelect;
 use itertools::Itertools;
 use log::warn;
@@ -17,14 +17,14 @@ pub fn main() -> Result<()> {
 
 	if inactive_roles.is_empty() {
 		warn!("No inactive roles to select");
-		return Err(anyhow!("no roles to select"));
+		return Ok(());
 	}
 
 	let new_roles = HashSet::from_iter(select_roles(inactive_roles)?);
 
 	if new_roles.is_empty() {
 		warn!("No roles selected");
-		return Err(anyhow!("no roles selected"));
+		return Ok(());
 	}
 
 	let plays = roles::get_plays_for_roles(roles::get_plays(), &new_roles);
