@@ -13,7 +13,7 @@ pub fn get_active_roles_file() -> PathBuf {
 }
 
 pub fn get_playbook_file() -> PathBuf {
-	get_xdg_cache_home().join("rolr-playbook.yml")
+	get_config_dir().join("playbook.yml")
 }
 
 pub fn get_roles_dir() -> PathBuf {
@@ -34,14 +34,6 @@ fn get_xdg_config_home() -> PathBuf {
 	}
 
 	get_home().join(".config")
-}
-
-fn get_xdg_cache_home() -> PathBuf {
-	if let Ok(path) = env::var("XDG_CACHE_HOME") {
-		return path.into();
-	}
-
-	get_home().join(".cache")
 }
 
 fn get_home() -> PathBuf {
