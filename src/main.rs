@@ -1,6 +1,7 @@
 use anyhow::Result;
 use cli::{CliArgs, Commands};
-use std::cmp::max;
+use log::error;
+use std::{cmp::max, process::exit};
 
 mod cli;
 mod commands;
@@ -13,7 +14,10 @@ fn main() {
 
 	init_logger(cli.verbosity.into());
 
-	run_command(cli).unwrap();
+	if let Err(err) = run_command(cli) {
+		error!("{}", err);
+		exit(1);
+	}
 }
 
 fn run_command(cli: CliArgs) -> Result<()> {
@@ -32,5 +36,5 @@ fn init_logger(verbosity: usize) {
 		.verbosity(max(1, verbosity) - 1)
 		.timestamp(stderrlog::Timestamp::Off)
 		.init()
-		.expect("logger init failed");
+		.expect("logger already initialized");
 }

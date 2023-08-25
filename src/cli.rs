@@ -18,18 +18,18 @@ pub struct CliArgs {
 
 #[derive(Subcommand)]
 pub enum Commands {
-	/// Select roles
+	/// Activate roles
 	Add { roles: Vec<String> },
 
-	/// Select roles in a graphical menu
+	/// Activate roles in a graphical menu
 	Select,
 
-	/// Update all selected roles
+	/// Update all active roles
 	Update,
 
 	/// List available roles
 	List,
 
-	/// Run roles without selecting them
+	/// Run roles without activating them
 	Run { roles: Vec<String> },
 }

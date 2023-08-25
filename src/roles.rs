@@ -1,5 +1,5 @@
 use crate::config;
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use itertools::Itertools;
 use lazy_static::lazy_static;
 use log::warn;
@@ -30,14 +30,18 @@ pub fn get_active_roles() -> HashSet<String> {
 }
 
 pub fn set_active_roles(roles: &HashSet<String>) -> Result<()> {
-	let file = File::create(config::get_active_roles_file())?;
-	let mut writer = BufWriter::new(file);
+	fn inner(roles: &HashSet<String>) -> Result<()> {
+		let file = File::create(config::get_active_roles_file())?;
+		let mut writer = BufWriter::new(file);
 
-	for role in roles.iter().sorted() {
-		writeln!(writer, "{}", &role)?;
+		for role in roles.iter().sorted() {
+			writeln!(writer, "{}", &role)?;
+		}
+
+		Ok(())
 	}
 
-	Ok(())
+	inner(roles).map_err(|err| anyhow!("Failed to update active roles: {err}"))
 }
 
 pub fn get_roles() -> IntoIter<Role> {
@@ -91,6 +95,18 @@ pub fn filter_invalid_roles(all_plays: &[Play], roles: Vec<String>, warn: bool) 
 	}
 
 	valid
+}
+
+pub fn filter_active_roles(active_roles: &HashSet<String>, roles: Vec<String>, warn: bool) -> Vec<String> {
+	let (active, inactive): (Vec<_>, Vec<_>) = roles.into_iter().partition(|r| active_roles.contains(r));
+
+	if warn {
+		for active_role in active {
+			warn!(r#"Skipping active role "{}""#, active_role)
+		}
+	}
+
+	inactive
 }
 
 fn is_yml_file(entry: &DirEntry) -> bool {

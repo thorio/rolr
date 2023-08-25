@@ -2,10 +2,9 @@ use crate::{
 	playbook,
 	roles::{self, Role},
 };
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use dialoguer::MultiSelect;
 use itertools::Itertools;
-use log::warn;
 use std::collections::HashSet;
 
 pub fn main() -> Result<()> {
@@ -16,16 +15,10 @@ pub fn main() -> Result<()> {
 		.collect_vec();
 
 	if inactive_roles.is_empty() {
-		warn!("No inactive roles to select");
-		return Ok(());
+		return Err(anyhow!("No inactive roles to select"));
 	}
 
 	let new_roles = HashSet::from_iter(select_roles(inactive_roles)?);
-
-	if new_roles.is_empty() {
-		warn!("No roles selected");
-		return Ok(());
-	}
 
 	let plays = roles::get_plays_for_roles(roles::get_plays(), &new_roles);
 
@@ -40,7 +33,14 @@ pub fn main() -> Result<()> {
 pub fn select_roles(roles: Vec<Role>) -> Result<Vec<String>> {
 	let items = roles.iter().map(|r| r.display(20).to_string()).collect_vec();
 
-	let chosen: Vec<usize> = MultiSelect::new().items(&items).interact()?;
+	let chosen_indices = MultiSelect::new().items(&items).interact_opt()?.unwrap_or_default();
 
-	Ok(chosen.into_iter().map(|i| roles[i].name.clone()).collect_vec())
+	let chosen_roles = roles
+		.into_iter()
+		.enumerate()
+		.filter(|(i, _)| chosen_indices.contains(i))
+		.map(|(_, role)| role.name)
+		.collect_vec();
+
+	Ok(chosen_roles)
 }

@@ -1,7 +1,7 @@
 use crate::{config, roles::Play};
 use anyhow::{anyhow, Result};
 use std::{
-	fs::{self, File},
+	fs::File,
 	io::{BufWriter, Write},
 	os::unix::process::CommandExt,
 	path::Path,
@@ -11,13 +11,18 @@ use std::{
 #[allow(unused)]
 pub fn run_plays(plays: &[Play]) -> Result<()> {
 	let playbook_path = config::get_playbook_file();
-	generate(&playbook_path, plays)?;
+
+	if plays.is_empty() {
+		return Err(anyhow!("Nothing to do."));
+	}
+
+	generate(&playbook_path, plays)
+		.map_err(|err| anyhow!("Unable to generate playbook at {playbook_path:?}: {err}"))?;
+
 	run(&playbook_path);
 }
 
 fn generate(path: impl AsRef<Path>, plays: &[Play]) -> Result<()> {
-	fs::create_dir_all(path.as_ref().parent().ok_or(anyhow!(""))?)?;
-
 	let file = File::create(path)?;
 	let mut writer = BufWriter::new(file);
 
@@ -32,7 +37,7 @@ fn generate(path: impl AsRef<Path>, plays: &[Play]) -> Result<()> {
 }
 
 fn run(path: impl AsRef<Path>) -> ! {
-	Command::new("ansible-playbook")
+	let err = Command::new("ansible-playbook")
 		.args(vec![
 			"--connection=local",
 			"--inventory=localhost,",
@@ -42,5 +47,5 @@ fn run(path: impl AsRef<Path>) -> ! {
 		])
 		.exec();
 
-	panic!("exec ansible didn't work");
+	panic!("exec ansible-playbook didn't work: {err}");
 }
