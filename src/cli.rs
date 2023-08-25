@@ -1,13 +1,13 @@
 use clap::{Parser, Subcommand};
 
-pub fn parse() -> CliArgs {
-	CliArgs::parse()
+pub fn parse() -> Args {
+	Args::parse()
 }
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 #[command(propagate_version = true)]
-pub struct CliArgs {
+pub struct Args {
 	#[command(subcommand)]
 	pub command: Commands,
 

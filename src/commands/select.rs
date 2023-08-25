@@ -25,9 +25,7 @@ pub fn main() -> Result<()> {
 	active_roles.extend(new_roles);
 	roles::set_active_roles(&active_roles)?;
 
-	playbook::run_plays(&plays)?;
-
-	Ok(())
+	playbook::run_plays(&plays)
 }
 
 pub fn select_roles(roles: Vec<Role>) -> Result<Vec<String>> {

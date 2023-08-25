@@ -48,20 +48,18 @@ pub fn get_roles() -> IntoIter<Role> {
 	get_plays()
 		.into_group_map_by(|p| p.play_name.clone())
 		.into_iter()
-		.filter_map(get_role)
+		.map(get_role)
 		.sorted_by(|a, b| str::cmp(&a.name, &b.name))
 }
 
-fn get_role(pair: (String, Vec<Play>)) -> Option<Role> {
-	let (name, plays) = pair;
-
+fn get_role((name, plays): (String, Vec<Play>)) -> Role {
 	let description = plays.first().unwrap().description.clone();
 
-	Some(Role {
-		description,
+	Role {
 		name,
+		description,
 		plays,
-	})
+	}
 }
 
 /// Returns the full path of available role files in alphabetical order.
@@ -90,7 +88,7 @@ pub fn filter_invalid_roles(all_plays: &[Play], roles: Vec<String>, warn: bool) 
 
 	if warn {
 		for invalid_role in invalid {
-			warn!(r#"Skipping unknown role "{}""#, invalid_role)
+			warn!(r#"Skipping unknown role "{}""#, invalid_role);
 		}
 	}
 
@@ -102,7 +100,7 @@ pub fn filter_active_roles(active_roles: &HashSet<String>, roles: Vec<String>, w
 
 	if warn {
 		for active_role in active {
-			warn!(r#"Skipping active role "{}""#, active_role)
+			warn!(r#"Skipping active role "{}""#, active_role);
 		}
 	}
 
@@ -112,7 +110,7 @@ pub fn filter_active_roles(active_roles: &HashSet<String>, roles: Vec<String>, w
 fn is_yml_file(entry: &DirEntry) -> bool {
 	let path = entry.path();
 
-	path.is_file() && path.extension().map(|e| e == "yml").unwrap_or(false)
+	path.is_file() && path.extension().map_or(false, |e| e == "yml")
 }
 
 fn get_play_name(path: impl AsRef<Path>) -> Option<String> {

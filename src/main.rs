@@ -1,5 +1,5 @@
 use anyhow::Result;
-use cli::{CliArgs, Commands};
+use cli::Commands;
 use log::error;
 use std::{cmp::max, process::exit};
 
@@ -20,7 +20,7 @@ fn main() {
 	}
 }
 
-fn run_command(cli: CliArgs) -> Result<()> {
+fn run_command(cli: cli::Args) -> Result<()> {
 	match cli.command {
 		Commands::List => commands::list(),
 		Commands::Add { roles } => commands::add(roles),
