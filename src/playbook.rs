@@ -38,6 +38,7 @@ fn generate(path: impl AsRef<Path>, plays: &[Play]) -> Result<()> {
 
 fn run(path: impl AsRef<Path>) -> ! {
 	let err = Command::new("ansible-playbook")
+		.current_dir(config::get_config_dir())
 		.args(vec![
 			"--connection=local",
 			"--inventory=localhost,",

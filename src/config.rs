@@ -20,7 +20,7 @@ pub fn get_roles_dir() -> PathBuf {
 	get_config_dir().join("roles").join(ARCH).join(get_os_release_id())
 }
 
-fn get_config_dir() -> PathBuf {
+pub fn get_config_dir() -> PathBuf {
 	if let Ok(path) = env::var(ENV_ROLR_CONFIG_PATH) {
 		return path.into();
 	}
