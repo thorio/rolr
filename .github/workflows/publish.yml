@@ -12,6 +12,8 @@ jobs:
     strategy:
       matrix:
         arch: ["x86_64", "aarch64"]
+    env:
+      target: ${{ matrix.arch }}-unknown-linux-musl
     steps:
       - name: checkout repository
         uses: actions/checkout@v3
@@ -19,7 +21,7 @@ jobs:
       - name: install tools
         run: |
           sudo apt-get install musl-tools -y
-          rustup target add ${{ matrix.arch }}-unknown-linux-musl
+          rustup target add $target
           cargo install cargo-deb
 
       # ubuntu doesn't have an aarch64 musl gcc package,
@@ -37,10 +39,10 @@ jobs:
           sed -i "0,/version/{s/0.0.0/$version/}" Cargo.toml
 
       - name: build standalone binary
-        run: cargo build --release && cp target/${{ matrix.arch }}-unknown-linux-musl/release/rolr ./rolr-${{ matrix.arch }} && xz rolr-${{ matrix.arch }}
+        run: cargo build --release --target $target && cp target/$target/release/rolr ./rolr-${{ matrix.arch }} && xz rolr-${{ matrix.arch }}
 
       - name: package deb
-        run: cargo deb --target ${{ matrix.arch }}-unknown-linux-musl && cp target/${{ matrix.arch }}-unknown-linux-musl/debian/rolr*.deb ./rolr-${{ matrix.arch }}.deb
+        run: cargo deb --target $target && cp target/$target/debian/rolr*.deb ./rolr-${{ matrix.arch }}.deb
 
       - name: Release
         uses: softprops/action-gh-release@v1
