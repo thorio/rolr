@@ -1,0 +1,100 @@
+[config]
+skip_core_tasks = true
+
+[tasks.test]
+script = "env"
+
+[tasks.ci-ubuntu]
+# doing cross-compiles this way is really stupid but I didn't find a good way to parametrize this
+run_task = { name = ["release-deb-x86", "release-deb-arm", "release-tar-x86", "release-tar-arm"] }
+
+[tasks.ci-arch]
+run_task = { name = ["release-archpkg"] }
+
+[tasks.patch-version]
+script_runner = "sh"
+script = '''
+	sha=$(git rev-parse --short HEAD)
+	tag=$(git describe --tags --abbrev=0 --match 'v*' | sed 's/^v//')
+	sed -i "s/0.0.0-dev/$tag+$sha/" Cargo.toml
+	sed -i "s/0.0.0_dev/$(echo $tag | sed 's/-/_/g')/" package/arch/PKGBUILD
+	sed -i "s/0.0.0-dev/$tag/" package/debian/control
+'''
+
+[tasks.artifact-dropoff]
+script_runner = "sh"
+script = "mkdir -p target/artifacts"
+
+[tasks.release-deb-x86]
+dependencies = ["artifact-dropoff", "patch-version"]
+condition = { platforms = ["linux"] }
+script_runner = "sh"
+script = '''
+	cargo build --release --target x86_64-unknown-linux-musl
+
+	sed -i "s/Architecture:.*/Architecture: amd64/" package/debian/control
+	rm -rf "package/debian/pkg" "package/debian/*.deb"
+
+	install -Dm755 "target/x86_64-unknown-linux-musl/release/rolr" "package/debian/pkg/usr/bin/rolr"
+	install -Dm644 "package/debian/control" "package/debian/pkg/DEBIAN/control"
+	(cd package/debian && dpkg-deb --build --root-owner-group pkg)
+
+	cp -a package/debian/*.deb target/artifacts/rolr-x86_64.deb
+'''
+
+[tasks.release-deb-arm]
+dependencies = ["artifact-dropoff", "patch-version"]
+condition = { platforms = ["linux"] }
+script_runner = "sh"
+script = '''
+	CC=aarch64-linux-gnu-gcc \
+	CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER=aarch64-linux-gnu-gcc \
+	cargo build --release --target aarch64-unknown-linux-musl
+
+	sed -i "s/Architecture:.*/Architecture: arm64/" package/debian/control
+	rm -rf "package/debian/pkg" "package/debian/*.deb"
+
+	install -Dm755 "target/aarch64-unknown-linux-musl/release/rolr" "package/debian/pkg/usr/bin/rolr"
+	install -Dm644 "package/debian/control" "package/debian/pkg/DEBIAN/control"
+	(cd package/debian && dpkg-deb --build --root-owner-group pkg)
+
+	cp -a package/debian/*.deb target/artifacts/rolr-aarch64.deb
+'''
+
+[tasks.release-tar-x86]
+dependencies = ["artifact-dropoff", "patch-version"]
+condition = { platforms = ["linux"] }
+script_runner = "sh"
+script = '''
+	cargo build --release --target x86_64-unknown-linux-musl
+
+	mkdir -p target/tmp/tar
+	cp LICENSE target/tmp/tar/LICENSE
+	cp target/x86_64-unknown-linux-musl/release/rolr target/tmp/tar/rolr
+	(cd target/tmp/tar && tar czf ../../artifacts/rolr-x86_64.tar.gz .)
+'''
+
+[tasks.release-tar-arm]
+dependencies = ["artifact-dropoff", "patch-version"]
+condition = { platforms = ["linux"] }
+script_runner = "sh"
+script = '''
+	CC=aarch64-linux-gnu-gcc \
+	CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER=aarch64-linux-gnu-gcc \
+	cargo build --release --target aarch64-unknown-linux-musl
+
+	mkdir -p target/tmp/tar
+	cp LICENSE target/tmp/tar/LICENSE
+	cp target/aarch64-unknown-linux-musl/release/rolr target/tmp/tar/rolr
+	(cd target/tmp/tar && tar czf ../../artifacts/rolr-aarch64.tar.gz .)
+'''
+
+[tasks.release-archpkg]
+dependencies = ["patch-version", "artifact-dropoff"]
+condition = { platforms = ["linux"] }
+script_runner = "sh"
+script = '''
+	cargo build --release --target x86_64-unknown-linux-musl
+	(cd package/arch && makepkg -Cf)
+	cp -a package/arch/*.pkg.tar.zst target/artifacts/rolr-x86_64.pkg.tar.zst
+'''

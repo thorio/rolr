@@ -1,0 +1,7 @@
+Package: rolr
+Architecture: amd64
+Version: 0.0.0-dev
+Maintainer: thorou <thorou@chirality.de>
+Section: utils
+Priority: extra
+Description: Host role manager built on top of ansible
