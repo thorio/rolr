@@ -2,7 +2,6 @@ use crate::config;
 use anyhow::{anyhow, Result};
 use itertools::Itertools;
 use lazy_static::lazy_static;
-use log::warn;
 use regex::Regex;
 use std::{
 	collections::HashSet,
@@ -20,7 +19,7 @@ lazy_static! {
 
 pub fn get_active_roles() -> HashSet<String> {
 	let Ok(file) = File::open(config::get_active_roles_file()) else {
-		return HashSet::default()
+		return HashSet::default();
 	};
 
 	BufReader::new(file)
@@ -67,7 +66,7 @@ pub fn get_plays() -> IntoIter<Play> {
 	let roles_dir = config::get_roles_dir();
 
 	let Ok(entries) = fs::read_dir(roles_dir) else {
-		return IntoIter::default()
+		return IntoIter::default();
 	};
 
 	entries
@@ -88,7 +87,7 @@ pub fn filter_invalid_roles(all_plays: &[Play], roles: Vec<String>, warn: bool) 
 
 	if warn {
 		for invalid_role in invalid {
-			warn!(r#"Skipping unknown role "{}""#, invalid_role);
+			log::warn!(r#"Skipping unknown role "{}""#, invalid_role);
 		}
 	}
 
@@ -100,7 +99,7 @@ pub fn filter_active_roles(active_roles: &HashSet<String>, roles: Vec<String>, w
 
 	if warn {
 		for active_role in active {
-			warn!(r#"Skipping active role "{}""#, active_role);
+			log::warn!(r#"Skipping active role "{}""#, active_role);
 		}
 	}
 

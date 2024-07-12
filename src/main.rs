@@ -1,6 +1,5 @@
 use anyhow::Result;
 use cli::Commands;
-use log::error;
 use std::{cmp::max, process::exit};
 
 mod cli;
@@ -15,7 +14,7 @@ fn main() {
 	init_logger(cli.verbosity.into());
 
 	if let Err(err) = run_command(cli) {
-		error!("{}", err);
+		log::error!("{}", err);
 		exit(1);
 	}
 }

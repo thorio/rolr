@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/rust:0-1-bullseye
+FROM mcr.microsoft.com/devcontainers/rust:1-bookworm
 
 RUN apt-get update && \
 	apt-get install ansible musl-tools cowsay -y && \
