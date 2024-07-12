@@ -1,7 +1,5 @@
-use crate::{
-	playbook,
-	roles::{self, Role},
-};
+use crate::playbook;
+use crate::roles::{self, Role};
 use anyhow::{anyhow, Result};
 use dialoguer::MultiSelect;
 use itertools::Itertools;

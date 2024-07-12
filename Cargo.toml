@@ -23,9 +23,7 @@ clap = { version = "4.5.9", features = ["derive"] }
 console = "0.15.8"
 dialoguer = { version = "0.11.0", default-features = false }
 itertools = "0.13.0"
-lazy_static = "1.5.0"
 log = "0.4.22"
-regex = "1.10.5"
 stderrlog = "0.6.0"
 sys-info = "0.9.1"
 
@@ -34,3 +32,29 @@ panic = "abort"
 opt-level = "s"
 strip = true
 lto = true
+
+[lints.rust]
+keyword_idents = "warn"
+non_ascii_idents = "forbid"
+noop_method_call = "warn"
+single_use_lifetimes = "warn"
+unused_crate_dependencies = "warn"
+unused_lifetimes = "deny"
+unused_qualifications = "warn"
+
+[lints.clippy]
+cognitive_complexity = "warn"
+dbg_macro = "warn"
+empty_structs_with_brackets = "warn"
+equatable_if_let = "warn"
+explicit_iter_loop = "warn"
+match_wildcard_for_single_variants = "warn"
+or_fun_call = "warn"
+question_mark = "warn"
+redundant_closure_for_method_calls = "warn"
+semicolon_if_nothing_returned = "warn"
+unwrap_used = "warn"
+use_self = "warn"
+used_underscore_binding = "warn"
+wildcard_imports = "warn"
+missing_panics_doc = "warn"

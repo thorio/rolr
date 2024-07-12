@@ -1,14 +1,8 @@
 use crate::{config, roles::Play};
 use anyhow::{anyhow, Result};
-use std::{
-	fs::File,
-	io::{BufWriter, Write},
-	os::unix::process::CommandExt,
-	path::Path,
-	process::Command,
-};
+use std::io::{BufWriter, Write};
+use std::{fs::File, os::unix::process::CommandExt, path::Path, process::Command};
 
-#[allow(unused)]
 pub fn run_plays(plays: &[Play]) -> Result<()> {
 	let playbook_path = config::get_playbook_file();
 
@@ -43,7 +37,7 @@ fn run(path: impl AsRef<Path>) -> ! {
 			"--connection=local",
 			"--inventory=localhost,",
 			"--limit=localhost",
-			path.as_ref().to_str().unwrap(),
+			&path.as_ref().to_string_lossy(),
 			"-K",
 		])
 		.exec();

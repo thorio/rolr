@@ -1,21 +1,11 @@
 use crate::config;
 use anyhow::{anyhow, Result};
 use itertools::Itertools;
-use lazy_static::lazy_static;
-use regex::Regex;
-use std::{
-	collections::HashSet,
-	fmt::{self, Display, Formatter},
-	fs::{self, DirEntry, File},
-	io::Write,
-	io::{BufRead, BufReader, BufWriter},
-	path::{Path, PathBuf},
-	vec::IntoIter,
-};
-
-lazy_static! {
-	static ref PRIORITY_REGEX: Regex = Regex::new(r"^\d+-").expect("invalid regex");
-}
+use std::fmt::{self, Display, Formatter};
+use std::fs::{self, DirEntry, File};
+use std::io::{BufRead, BufReader, BufWriter, Write};
+use std::path::{Path, PathBuf};
+use std::{collections::HashSet, vec::IntoIter};
 
 pub fn get_active_roles() -> HashSet<String> {
 	let Ok(file) = File::open(config::get_active_roles_file()) else {
@@ -52,7 +42,7 @@ pub fn get_roles() -> IntoIter<Role> {
 }
 
 fn get_role((name, plays): (String, Vec<Play>)) -> Role {
-	let description = plays.first().unwrap().description.clone();
+	let description = plays.first().expect("cannot pass empty group").description.clone();
 
 	Role {
 		name,
@@ -112,10 +102,10 @@ fn is_yml_file(entry: &DirEntry) -> bool {
 	path.is_file() && path.extension().map_or(false, |e| e == "yml")
 }
 
-fn get_play_name(path: impl AsRef<Path>) -> Option<String> {
-	let stem = path.as_ref().file_stem()?.to_str()?;
+fn get_play_name(path: &Path) -> Option<&str> {
+	let stem = path.file_stem()?.to_str()?;
 
-	Some(PRIORITY_REGEX.replace(stem, "").into_owned())
+	Some(stem.split_once('-').map(|(_, rest)| rest).unwrap_or(stem))
 }
 
 fn get_play_description(path: impl AsRef<Path>) -> Option<String> {
@@ -152,7 +142,7 @@ pub struct Play {
 impl Play {
 	fn new(path: PathBuf) -> Option<Self> {
 		Some(Self {
-			play_name: get_play_name(&path)?,
+			play_name: get_play_name(&path)?.to_owned(),
 			description: get_play_description(&path),
 			path,
 		})

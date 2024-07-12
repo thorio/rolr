@@ -1,7 +1,5 @@
-use std::{
-	env::{self, consts::ARCH},
-	path::PathBuf,
-};
+use std::env::{self, consts::ARCH};
+use std::path::PathBuf;
 use sys_info::linux_os_release;
 
 const APP_NAME: &str = env!("CARGO_PKG_NAME");
