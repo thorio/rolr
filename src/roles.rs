@@ -44,11 +44,7 @@ pub fn get_roles() -> IntoIter<Role> {
 fn get_role((name, plays): (String, Vec<Play>)) -> Role {
 	let description = plays.first().expect("cannot pass empty group").description.clone();
 
-	Role {
-		name,
-		description,
-		plays,
-	}
+	Role { name, description }
 }
 
 /// Returns the full path of available role files in alphabetical order.
@@ -124,7 +120,6 @@ fn get_play_description(path: impl AsRef<Path>) -> Option<String> {
 pub struct Role {
 	pub name: String,
 	pub description: Option<String>,
-	pub plays: Vec<Play>,
 }
 
 impl Role {
