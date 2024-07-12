@@ -21,7 +21,7 @@ pub enum Commands {
 	/// Activate roles
 	Add { roles: Vec<String> },
 
-	/// Activate roles in a graphical menu
+	/// Activate roles in a TUI menu
 	Select,
 
 	/// Update all active roles
