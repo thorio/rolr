@@ -3,7 +3,9 @@
 ![GitHub License](https://img.shields.io/github/license/thorio/rolr?style=flat-square)
 ![GitHub last commit](https://img.shields.io/github/last-commit/thorio/rolr?style=flat-square)
 
-rolr is a convenience tool to manage your local host with ansible. You define roles as ansible playbooks, then select the roles you would like. Commit your config to a dotfiles repository and you have an automatic solution for setting up and keeping your various systems up to date.  
+[![asciicast](https://asciinema.org/a/xsIQnFL5oPSsyvB74qzsP0g56.svg)](https://asciinema.org/a/xsIQnFL5oPSsyvB74qzsP0g56)
+
+rolr is a convenience tool to manage your local host with ansible. You define roles as ansible playbooks, then select the roles you want on a given system. Commit your config to a dotfiles repository and you have an automatic solution for setting up and keeping your various systems up to date.  
 See this excellent [Youtube video][video] by Jeff Geerling to find out why you want this. Though the video primarily focuses on MacOS, the concept works on Linux just as well.
 
 The author uses this in conjunction with a dotfiles repo and a [few bootstrapping scripts][bootstrapper] to manage various servers, desktops, laptops and WSL installations on multiple distros, keeping their configuration in sync.
@@ -41,9 +43,42 @@ Note: The executable is fully statically linked and should therefore run basical
 
 
 ### Usage
-TODO
+Place ansible playbooks in `~/.config/rolr/roles`, separated by archicture and distro, e.g. `x86_64/ubuntu/10-base.yml`.  
+rolr will only use playbooks from the matching arch+distro folder, so you can use the same config across systems.
 
-See `rolr --help`
+Now run `rolr list` to view your roles, and `rolr add ROLE` to add them to the current system. Added roles can be re-run with `rolr update`.
+
+Also see `rolr --help`.
+
+
+### Tips
+
+- Write idempotent playbooks to ensure updates work as expected. To quote [ansible's documentation][idempotency]:
+  > An operation is idempotent if the result of performing it once is exactly the same as the result of performing it repeatedly without any intervening actions.
+
+- Run `rolr select` to quickly view and add roles in a TUI menu.
+
+- Run individual roles quickly with `rolr run ROLE`. This will only run that role, without adding to the list of active roles.
+
+- Place an ansible config file in `~/.config/rolr/ansible.cfg` with these contents to quiet ansible down a bit:
+  ```ini
+  [defaults]
+  display_skipped_hosts = false
+  display_ok_hosts = false
+  ```
+
+- Playbooks will be run in the order they appear in the filesystem, use numbered prefixes to influence this.
+  If a role's name occurs multiple times, all instances will be run. Use this to split roles into multiple chunks and control the timing of their execution.
+
+- A comment on the first line of the playbook will be interpreted as the description.
+
+- Use symlinks for playbook re-use across distros and architectures.
+
+- [Store your dotfiles in a bare git repo][dotfiles] to easily share and synchronize them across all your systems.  
+  For this, add `active.txt` and `playbook.yml` to your gitignore.
+
+[idempotency]: https://docs.ansible.com/ansible/latest/reference_appendices/glossary.html#term-Idempotency
+[dotfiles]: https://harfangk.github.io/2016/09/18/manage-dotfiles-with-a-git-bare-repository.html
 
 
 # Development
