@@ -1,8 +1,15 @@
 [config]
 skip_core_tasks = true
 
-[tasks.test]
-script = "env"
+[tasks.ci-check]
+script_runner = "sh"
+script = '''
+	cargo fmt --check
+	cargo clippy
+	cargo clippy --no-default-features
+	cargo doc --no-deps --document-private-items
+	cargo test --verbose
+'''
 
 [tasks.ci-ubuntu]
 # doing cross-compiles this way is really stupid but I didn't find a good way to parametrize this
