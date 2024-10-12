@@ -69,7 +69,7 @@ Also see `rolr --help`.
   display_ok_hosts = false
   ```
 
-- Playbooks will be run in the order they appear in the filesystem, use numbered prefixes to influence this.
+- Playbooks will be run in alphanumerical order, use numbered prefixes to control this.
   If a role's name occurs multiple times, all instances will be run. Use this to split roles into multiple chunks and control the timing of their execution.
 
 - A comment on the first line of the playbook will be interpreted as the description.
