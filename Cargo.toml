@@ -13,7 +13,7 @@ anyhow = "1.0.86"
 clap = { version = "4.5.9", features = ["derive"] }
 console = "0.15.8"
 dialoguer = { version = "0.11.0", default-features = false }
-itertools = "0.13.0"
+itertools = "0.14.0"
 log = "0.4.22"
 stderrlog = "0.6.0"
 sys-info = "0.9.1"
