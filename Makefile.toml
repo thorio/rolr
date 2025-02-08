@@ -45,7 +45,7 @@ script = '''
 	install -Dm755 "target/x86_64-unknown-linux-musl/release/rolr" "package/debian/pkg/usr/bin/rolr"
 
 	install -Dm644 "completions/rolr.bash" "package/debian/pkg/usr/share/bash-completion/completions/rolr"
-	install -Dm644 "completions/_rolr" "package/debian/pkg/usr/share/zsh/site-functions/_rolr"
+	install -Dm644 "completions/_rolr" "package/debian/pkg/usr/share/zsh/vendor-completions/_rolr"
 	install -Dm644 "completions/rolr.fish" "package/debian/pkg/usr/share/fish/vendor_completions.d/rolr.fish"
 
 	install -Dm644 "package/debian/control" "package/debian/pkg/DEBIAN/control"
@@ -69,7 +69,7 @@ script = '''
 	install -Dm755 "target/aarch64-unknown-linux-musl/release/rolr" "package/debian/pkg/usr/bin/rolr"
 
 	install -Dm644 "completions/rolr.bash" "package/debian/pkg/usr/share/bash-completion/completions/rolr"
-	install -Dm644 "completions/_rolr" "package/debian/pkg/usr/share/zsh/site-functions/_rolr"
+	install -Dm644 "completions/_rolr" "package/debian/pkg/usr/share/zsh/vendor-completions/_rolr"
 	install -Dm644 "completions/rolr.fish" "package/debian/pkg/usr/share/fish/vendor_completions.d/rolr.fish"
 
 	install -Dm644 "package/debian/control" "package/debian/pkg/DEBIAN/control"
