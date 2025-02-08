@@ -1,6 +1,7 @@
 use anyhow::Result;
 use cli::Commands;
-use std::{cmp::max, process::exit};
+use log::LevelFilter;
+use std::process::exit;
 
 mod cli;
 mod commands;
@@ -11,7 +12,7 @@ mod roles;
 fn main() {
 	let cli = cli::parse();
 
-	init_logger(cli.verbosity.into());
+	init_logger(cli.verbosity.log_level_filter());
 
 	if let Err(err) = run_command(cli) {
 		log::error!("{}", err);
@@ -29,10 +30,9 @@ fn run_command(cli: cli::Args) -> Result<()> {
 	}
 }
 
-fn init_logger(verbosity: usize) {
+fn init_logger(level: LevelFilter) {
 	stderrlog::new()
-		.quiet(verbosity == 0)
-		.verbosity(max(1, verbosity) - 1)
+		.verbosity(level)
 		.timestamp(stderrlog::Timestamp::Off)
 		.init()
 		.expect("logger already initialized");

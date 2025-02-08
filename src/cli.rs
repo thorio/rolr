@@ -1,4 +1,5 @@
 use clap::{Parser, Subcommand};
+use clap_verbosity_flag::{InfoLevel, Verbosity};
 
 pub fn parse() -> Args {
 	Args::parse()
@@ -11,9 +12,8 @@ pub struct Args {
 	#[command(subcommand)]
 	pub command: Commands,
 
-	/// Set log level
-	#[arg(short, default_value = "3", value_parser = clap::value_parser!(u8).range(0..6))]
-	pub verbosity: u8,
+	#[command(flatten)]
+	pub verbosity: Verbosity<InfoLevel>,
 }
 
 #[derive(Subcommand)]
