@@ -32,4 +32,16 @@ pub enum Commands {
 
 	/// Run roles without activating them
 	Run { roles: Vec<String> },
+
+	/// Used for shell completions. Not stable!
+	#[command(hide = true)]
+	Complete { kind: CompleteKind },
+}
+
+#[expect(clippy::enum_variant_names)]
+#[derive(Copy, Clone, clap::ValueEnum)]
+pub enum CompleteKind {
+	AllRoles,
+	ActiveRoles,
+	InactiveRoles,
 }

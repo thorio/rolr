@@ -27,6 +27,7 @@ fn run_command(cli: cli::Args) -> Result<()> {
 		Commands::Select => commands::select(),
 		Commands::Update => commands::update(),
 		Commands::Run { roles } => commands::run(roles),
+		Commands::Complete { kind } => commands::complete(kind),
 	}
 }
 
