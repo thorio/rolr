@@ -95,7 +95,7 @@ pub fn filter_active_roles(active_roles: &HashSet<String>, roles: Vec<String>, w
 fn is_yml_file(entry: &DirEntry) -> bool {
 	let path = entry.path();
 
-	path.is_file() && path.extension().map_or(false, |e| e == "yml")
+	path.is_file() && path.extension().is_some_and(|e| e == "yml" || e == "yaml")
 }
 
 fn get_play_name(path: &Path) -> Option<&str> {
