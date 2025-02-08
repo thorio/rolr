@@ -43,6 +43,11 @@ script = '''
 	rm -rf "package/debian/pkg" "package/debian/*.deb"
 
 	install -Dm755 "target/x86_64-unknown-linux-musl/release/rolr" "package/debian/pkg/usr/bin/rolr"
+
+	install -Dm644 "completions/rolr.bash" "package/debian/pkg/usr/share/bash-completion/completions/rolr"
+	install -Dm644 "completions/_rolr" "package/debian/pkg/usr/share/zsh/site-functions/_rolr"
+	install -Dm644 "completions/rolr.fish" "package/debian/pkg/usr/share/fish/vendor_completions.d/rolr.fish"
+
 	install -Dm644 "package/debian/control" "package/debian/pkg/DEBIAN/control"
 	(cd package/debian && dpkg-deb --build --root-owner-group pkg)
 
@@ -62,6 +67,11 @@ script = '''
 	rm -rf "package/debian/pkg" "package/debian/*.deb"
 
 	install -Dm755 "target/aarch64-unknown-linux-musl/release/rolr" "package/debian/pkg/usr/bin/rolr"
+
+	install -Dm644 "completions/rolr.bash" "package/debian/pkg/usr/share/bash-completion/completions/rolr"
+	install -Dm644 "completions/_rolr" "package/debian/pkg/usr/share/zsh/site-functions/_rolr"
+	install -Dm644 "completions/rolr.fish" "package/debian/pkg/usr/share/fish/vendor_completions.d/rolr.fish"
+
 	install -Dm644 "package/debian/control" "package/debian/pkg/DEBIAN/control"
 	(cd package/debian && dpkg-deb --build --root-owner-group pkg)
 
@@ -75,9 +85,14 @@ script_runner = "sh"
 script = '''
 	cargo build --release --target x86_64-unknown-linux-musl
 
-	mkdir -p target/tmp/tar
+	mkdir -p target/tmp/tar/completions
 	cp LICENSE target/tmp/tar/LICENSE
 	cp target/x86_64-unknown-linux-musl/release/rolr target/tmp/tar/rolr
+
+	cp "completions/rolr.bash" "target/tmp/tar/completions/rolr.bash"
+	cp "completions/_rolr" "target/tmp/tar/completions/_rolr"
+	cp "completions/rolr.fish" "target/tmp/tar/completions/rolr.fish"
+
 	(cd target/tmp/tar && tar czf ../../artifacts/rolr-x86_64.tar.gz .)
 '''
 
@@ -93,6 +108,11 @@ script = '''
 	mkdir -p target/tmp/tar
 	cp LICENSE target/tmp/tar/LICENSE
 	cp target/aarch64-unknown-linux-musl/release/rolr target/tmp/tar/rolr
+
+	cp "completions/rolr.bash" "target/tmp/tar/completions/rolr.bash"
+	cp "completions/_rolr" "target/tmp/tar/completions/_rolr"
+	cp "completions/rolr.fish" "target/tmp/tar/completions/rolr.fish"
+
 	(cd target/tmp/tar && tar czf ../../artifacts/rolr-aarch64.tar.gz .)
 '''
 
