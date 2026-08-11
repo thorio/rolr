@@ -1,6 +1,7 @@
 use crate::{config, roles::Play};
 use anyhow::{anyhow, Result};
 use std::io::{BufWriter, Write};
+use std::process::exit;
 use std::{fs::File, os::unix::process::CommandExt, path::Path, process::Command};
 
 pub fn run_plays(plays: &[Play]) -> Result<()> {
@@ -33,7 +34,7 @@ fn generate(path: impl AsRef<Path>, plays: &[Play]) -> Result<()> {
 fn run(path: impl AsRef<Path>) -> ! {
 	let err = Command::new("ansible-playbook")
 		.current_dir(config::get_config_dir())
-		.args(vec![
+		.args([
 			"--connection=local",
 			"--inventory=localhost,",
 			"--limit=localhost",
@@ -42,5 +43,7 @@ fn run(path: impl AsRef<Path>) -> ! {
 		])
 		.exec();
 
-	panic!("exec ansible-playbook didn't work: {err}");
+	log::error!("{err}");
+	log::error!("exec ansible-playbook failed; maybe it isn't installed?");
+	exit(1)
 }

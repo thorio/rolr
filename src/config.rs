@@ -35,7 +35,7 @@ fn get_xdg_config_home() -> PathBuf {
 }
 
 fn get_home() -> PathBuf {
-	let home = env::var("HOME").expect("$HOME is undefined");
+	let home = env::var("HOME").expect("$HOME must be set");
 
 	PathBuf::from(home)
 }
@@ -45,6 +45,6 @@ fn get_os_release_id() -> String {
 		return distro;
 	}
 
-	let os_release = linux_os_release().expect("os-release not found");
-	os_release.id.expect("os-release id not found")
+	let os_release = linux_os_release().expect("os-release must exist");
+	os_release.id.expect("os-release must have id property")
 }

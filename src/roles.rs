@@ -1,11 +1,11 @@
 use crate::config;
 use anyhow::{anyhow, Result};
 use itertools::Itertools;
+use std::collections::HashSet;
 use std::fmt::{self, Display, Formatter};
 use std::fs::{self, DirEntry, File};
 use std::io::{BufRead, BufReader, BufWriter, Write};
 use std::path::{Path, PathBuf};
-use std::{collections::HashSet, vec::IntoIter};
 
 pub fn get_active_roles() -> HashSet<String> {
 	let Ok(file) = File::open(config::get_active_roles_file()) else {
@@ -33,7 +33,7 @@ pub fn set_active_roles(roles: &HashSet<String>) -> Result<()> {
 	inner(roles).map_err(|err| anyhow!("Failed to update active roles: {err}"))
 }
 
-pub fn get_roles() -> IntoIter<Role> {
+pub fn get_roles() -> impl Iterator<Item = Role> {
 	get_plays()
 		.into_group_map_by(|p| p.play_name.clone())
 		.into_iter()
@@ -48,11 +48,11 @@ fn get_role((name, plays): (String, Vec<Play>)) -> Role {
 }
 
 /// Returns the full path of available role files in alphabetical order.
-pub fn get_plays() -> IntoIter<Play> {
+pub fn get_plays() -> impl Iterator<Item = Play> {
 	let roles_dir = config::get_roles_dir();
 
 	let Ok(entries) = fs::read_dir(roles_dir) else {
-		return IntoIter::default();
+		return std::vec::IntoIter::default();
 	};
 
 	entries
@@ -62,7 +62,7 @@ pub fn get_plays() -> IntoIter<Play> {
 		.sorted_by(|a, b| PathBuf::cmp(&a.path, &b.path))
 }
 
-pub fn get_plays_for_roles(plays: IntoIter<Play>, roles: &HashSet<String>) -> Vec<Play> {
+pub fn get_plays_for_roles(plays: impl Iterator<Item = Play>, roles: &HashSet<String>) -> Vec<Play> {
 	plays.filter(|r| roles.contains(&r.play_name)).collect_vec()
 }
 
@@ -73,7 +73,7 @@ pub fn filter_invalid_roles(all_plays: &[Play], roles: Vec<String>, warn: bool) 
 
 	if warn {
 		for invalid_role in invalid {
-			log::warn!(r#"Skipping unknown role "{}""#, invalid_role);
+			log::warn!("Skipping unknown role \"{invalid_role}\"");
 		}
 	}
 
@@ -85,7 +85,7 @@ pub fn filter_active_roles(active_roles: &HashSet<String>, roles: Vec<String>, w
 
 	if warn {
 		for active_role in active {
-			log::warn!(r#"Skipping active role "{}""#, active_role);
+			log::warn!("Skipping active role \"{active_role}\"");
 		}
 	}
 

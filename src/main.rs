@@ -15,7 +15,7 @@ fn main() {
 	init_logger(cli.verbosity.log_level_filter());
 
 	if let Err(err) = run_command(cli) {
-		log::error!("{}", err);
+		log::error!("{err}");
 		exit(1);
 	}
 }
@@ -36,5 +36,5 @@ fn init_logger(level: LevelFilter) {
 		.verbosity(level)
 		.timestamp(stderrlog::Timestamp::Off)
 		.init()
-		.expect("logger already initialized");
+		.expect("first call must succeed");
 }
