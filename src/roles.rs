@@ -24,7 +24,7 @@ pub fn set_active_roles(roles: &HashSet<String>) -> Result<()> {
 		let mut writer = BufWriter::new(file);
 
 		for role in roles.iter().sorted() {
-			writeln!(writer, "{}", &role)?;
+			writeln!(writer, "{role}")?;
 		}
 
 		Ok(())
@@ -154,8 +154,8 @@ impl Display for RoleDisplay<'_> {
 		write!(
 			f,
 			"{:<padding$}  {}",
-			&self.role.name,
-			&self.role.description.as_deref().unwrap_or_default(),
+			self.role.name,
+			self.role.description.as_deref().unwrap_or_default(),
 			padding = self.padding
 		)
 	}

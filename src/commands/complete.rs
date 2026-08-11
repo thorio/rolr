@@ -16,7 +16,6 @@ pub fn main(kind: CompleteKind) -> Result<()> {
 	Ok(())
 }
 
-#[expect(single_use_lifetimes)]
 fn print_roles<'a>(roles: impl Iterator<Item = &'a Role>) {
 	for role in roles {
 		println!("{}:{}", role.name, role.description.as_deref().unwrap_or(""));
