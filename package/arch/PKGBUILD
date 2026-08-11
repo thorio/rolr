@@ -7,6 +7,7 @@ pkgdesc="Host role manager built on top of ansible"
 arch=("x86_64")
 url="https://github.com/thorio/$pkgname"
 license=("GPL3")
+depends=("ansible")
 options=("!strip" "!debug")
 
 package() {

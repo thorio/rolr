@@ -122,6 +122,6 @@ condition = { platforms = ["linux"] }
 script_runner = "sh"
 script = '''
 	cargo build --release --target x86_64-unknown-linux-musl
-	(cd package/arch && makepkg -Cf)
+	(cd package/arch && makepkg -Cdf)
 	cp -a package/arch/*.pkg.tar.zst target/artifacts/rolr-x86_64.pkg.tar.zst
 '''

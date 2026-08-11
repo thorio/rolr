@@ -4,4 +4,5 @@ Version: 0.0.0-dev
 Maintainer: thorou <thorou@chirality.de>
 Section: utils
 Priority: extra
+Depends: ansible
 Description: Host role manager built on top of ansible
